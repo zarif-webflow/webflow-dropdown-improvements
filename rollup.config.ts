@@ -9,7 +9,7 @@ import servePlugin from 'rollup-plugin-serve';
 import css from 'rollup-plugin-import-css';
 
 const input = {
-  index: './src/features/index.ts',
+  'dropdown-improvements': './src/features/dropdown-improvements.ts',
 };
 const outputFormat = 'module';
 
