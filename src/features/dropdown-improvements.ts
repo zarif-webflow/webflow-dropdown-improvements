@@ -53,8 +53,6 @@ const initDropdownImprovements = () => {
     };
 
     autoUpdate(dropdownToggle, dropdownList, setModalPosition);
-
-    console.log(dropdownList);
   }
 };
 
