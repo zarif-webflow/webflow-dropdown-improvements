@@ -8,6 +8,7 @@ import { setStyle } from "@/utils/set-style";
 const PROPERTIES = {
   globalDropdownMargin: "global-dropdown-margin",
   elementDropdownMargin: "data-dropdown-margin",
+  ignoreImprovements: "data-ignore-dropdown-improvements",
 };
 
 export const getGlobalDropdownMargin = () => {
@@ -35,6 +36,8 @@ const initDropdownImprovements = () => {
   if (!webflowDropdownElements) return;
 
   for (const dropdownElement of webflowDropdownElements) {
+    if (dropdownElement.hasAttribute(PROPERTIES.ignoreImprovements)) continue;
+
     const dropdownToggle = getHtmlElement({
       selector: ".w-dropdown-toggle",
       parent: dropdownElement,
