@@ -1,16 +1,34 @@
 import { autoUpdate, computePosition, flip, shift, size } from "@floating-ui/dom";
 
 import { afterWebflowReady } from "@/utils/after-webflow-ready";
+import { getActiveScript } from "@/utils/get-active-script";
 import { getHtmlElement, getMultipleHtmlElements } from "@/utils/get-html-element";
 import { setStyle } from "@/utils/set-style";
+
+const PROPERTIES = {
+  globalDropdownMargin: "global-dropdown-margin",
+  elementDropdownMargin: "data-dropdown-margin",
+};
+
+export const getGlobalDropdownMargin = () => {
+  const scriptElement = getActiveScript();
+
+  if (!scriptElement) return null;
+
+  return scriptElement.getAttribute(PROPERTIES.globalDropdownMargin);
+};
 
 const initDropdownImprovements = () => {
   const DEFAULT_MARGIN = "0.5rem";
 
-  const windowSpecifiedMargin =
-    "globalDropdownMargin" in window && typeof window.globalDropdownMargin === "string"
-      ? window.globalDropdownMargin
-      : DEFAULT_MARGIN;
+  const globalDropdownMargin = getGlobalDropdownMargin();
+
+  if (!globalDropdownMargin) {
+    console.debug(
+      `No global dropdown margin found in the script tag with ${PROPERTIES.globalDropdownMargin}, using default:`,
+      DEFAULT_MARGIN
+    );
+  }
 
   const webflowDropdownElements = getMultipleHtmlElements({ selector: ".w-dropdown" });
 
@@ -36,8 +54,8 @@ const initDropdownImprovements = () => {
     }
 
     const dropdownMargin =
-      dropdownElement.getAttribute("data-dropdown-margin") ||
-      windowSpecifiedMargin ||
+      dropdownElement.getAttribute(PROPERTIES.elementDropdownMargin) ||
+      globalDropdownMargin ||
       DEFAULT_MARGIN;
 
     const setModalPosition = () => {
