@@ -56,7 +56,7 @@ const initDropdownImprovements = () => {
       continue;
     }
 
-    dropdownList.setAttribute("data-lenis-prevet", "true");
+    dropdownList.setAttribute("data-lenis-prevent", "true");
 
     const dropdownMargin =
       dropdownElement.getAttribute(PROPERTIES.elementDropdownMargin) ||
