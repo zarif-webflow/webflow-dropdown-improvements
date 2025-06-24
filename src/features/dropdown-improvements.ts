@@ -1,9 +1,11 @@
 import { autoUpdate, computePosition, flip, shift, size } from "@floating-ui/dom";
-
-import { afterWebflowReady } from "@/utils/after-webflow-ready";
-import { getActiveScript } from "@/utils/get-active-script";
-import { getHtmlElement, getMultipleHtmlElements } from "@/utils/get-html-element";
-import { setStyle } from "@/utils/set-style";
+import {
+  afterWebflowReady,
+  getActiveScript,
+  getHtmlElement,
+  getMultipleHtmlElements,
+  setStyle,
+} from "@taj-wf/utils";
 
 const PROPERTIES = {
   globalDropdownMargin: "global-dropdown-margin",
@@ -11,8 +13,8 @@ const PROPERTIES = {
   ignoreImprovements: "data-ignore-dropdown-improvements",
 };
 
-export const getGlobalDropdownMargin = () => {
-  const scriptElement = getActiveScript();
+const getGlobalDropdownMargin = () => {
+  const scriptElement = getActiveScript(import.meta.url);
 
   if (!scriptElement) return null;
 
