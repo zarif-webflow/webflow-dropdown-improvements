@@ -1,5 +1,6 @@
 import { autoUpdate, computePosition, flip, shift, size } from "@floating-ui/dom";
 import {
+  addWFCustomPageLoadFeature,
   afterWebflowReady,
   getActiveScript,
   getHtmlElement,
@@ -11,7 +12,7 @@ const PROPERTIES = {
   globalDropdownMargin: "global-dropdown-margin",
   elementDropdownMargin: "data-dropdown-margin",
   ignoreImprovements: "data-ignore-dropdown-improvements",
-};
+} as const;
 
 const getGlobalDropdownMargin = () => {
   const scriptElement = getActiveScript(import.meta.url);
@@ -19,6 +20,14 @@ const getGlobalDropdownMargin = () => {
   if (!scriptElement) return null;
 
   return scriptElement.getAttribute(PROPERTIES.globalDropdownMargin);
+};
+
+const dropdownImprovementsDestroyers: Array<() => void> = [];
+
+const destroyDropdownImprovements = () => {
+  for (const destroy of dropdownImprovementsDestroyers) {
+    destroy();
+  }
 };
 
 const initDropdownImprovements = () => {
@@ -65,6 +74,12 @@ const initDropdownImprovements = () => {
       globalDropdownMargin ||
       DEFAULT_MARGIN;
 
+    const initialStyles = {
+      minWidth: dropdownList.style.minWidth || "",
+      top: dropdownList.style.top || "",
+      transform: dropdownList.style.transform || "",
+    };
+
     const setModalPosition = () => {
       computePosition(dropdownToggle, dropdownList, {
         placement: "bottom-start",
@@ -87,10 +102,28 @@ const initDropdownImprovements = () => {
       });
     };
 
-    autoUpdate(dropdownToggle, dropdownList, setModalPosition);
+    const killAutoUpdateModalPosition = autoUpdate(dropdownToggle, dropdownList, setModalPosition);
+
+    const destroy = () => {
+      killAutoUpdateModalPosition();
+      setStyle(dropdownList, initialStyles);
+    };
+
+    dropdownImprovementsDestroyers.push(destroy);
   }
 };
 
 afterWebflowReady(() => {
   initDropdownImprovements();
+
+  addWFCustomPageLoadFeature({
+    name: "IMPROVED_DROPDOWNS",
+    async: false,
+    init: initDropdownImprovements,
+    destroy: destroyDropdownImprovements,
+    reInit: () => {
+      destroyDropdownImprovements();
+      initDropdownImprovements();
+    },
+  });
 });
