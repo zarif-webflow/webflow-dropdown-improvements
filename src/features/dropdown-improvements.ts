@@ -68,6 +68,7 @@ const initDropdownImprovements = () => {
     }
 
     dropdownList.setAttribute("data-lenis-prevent", "true");
+    dropdownList.style.overflowY = "auto";
 
     const dropdownMargin =
       dropdownElement.getAttribute(PROPERTIES.elementDropdownMargin) ||
@@ -107,6 +108,7 @@ const initDropdownImprovements = () => {
     const destroy = () => {
       killAutoUpdateModalPosition();
       setStyle(dropdownList, initialStyles);
+      dropdownList.style.removeProperty("overflow-y");
     };
 
     dropdownImprovementsDestroyers.push(destroy);
